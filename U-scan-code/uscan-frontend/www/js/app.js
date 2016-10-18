@@ -8,6 +8,7 @@
 angular.module('scanner', [
   'ionic',
   'ngCordova',
+  'ionic-material',
   'scanner.controllers'
 ])
 
@@ -15,16 +16,16 @@ angular.module('scanner', [
     url: 'http://localhost:8100/list/'
   })
   .constant('RealList', {
-    url: 'http://172.21.147.177:8000/list/'
+    url: 'https://murmuring-everglades-54111.herokuapp.com/list/'
   })
   .constant('Register', {
-    url: 'http://172.21.147.177:8000/register/'
+    url: 'https://murmuring-everglades-54111.herokuapp.com/register/'
   })
   .constant('Check', {
     url: 'http://localhost:8100/check/'
   })
   .constant('RealCheck',{
-    url:'172.21.147.177:8000/check/'
+    url:'https://murmuring-everglades-54111.herokuapp.com/check/'
   })
   .service('eventName', function() {
     this.eventName = "";

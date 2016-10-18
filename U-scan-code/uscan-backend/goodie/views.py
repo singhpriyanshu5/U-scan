@@ -16,6 +16,7 @@ def index(request):
 def check_event(request,event_code):
     try:
         event = Event.objects.get(code=event_code)
+        print(event)
     except Event.DoesNotExist:
         return HttpResponse('false')
 

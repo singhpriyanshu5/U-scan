@@ -1,6 +1,6 @@
 angular.module('scanner.controllers', ['ionic'])
 
-  .controller('HomeController', function($scope, $rootScope, $cordovaBarcodeScanner, $ionicPlatform, $http, $timeout , $ionicModal ,Check,RealCheck , eventName) {
+  .controller('HomeController', function($scope, $rootScope, $cordovaBarcodeScanner, $ionicPlatform, $http, $timeout , $ionicModal, RealCheck , Register, RealList, eventName) {
     var vm = this;
     vm.scanResults = '';
     vm.succeedClass = 'Normal';
@@ -39,17 +39,20 @@ angular.module('scanner.controllers', ['ionic'])
       // Execute action
     });
 
+    
+
     $scope.login = function(){
       if($scope.eventName.eventCode== null || $scope.eventName.eventName == null){
         $scope.isInValid = "Black";
         $scope.message ="Null Values Present";
         $scope.isScan =false;
-      }else{
-        $http.get("http://172.21.147.177:8000/check/"+$scope.eventName.eventCode).then(function(resp){
-          //alert(resp);
-          if(resp.data.indexOf('false')== -1){
-            $scope.eventName.eventName = resp.data;
-            eventName.eventName = resp.data;
+      }else{        
+        $http.get(RealCheck.url+$scope.eventName.eventCode + "/").then(function(resp){
+          //alert(JSON.stringify(resp));
+          var data = JSON.stringify(resp.data)
+          if(data.indexOf('false')== -1){
+            $scope.eventName.eventName = resp.data['title'];
+            eventName.eventName = resp.data['title'];
             $scope.isInValid ="Green";
             $scope.message="Congrats!It works!";
             $scope.eventMessage ="Change event!";
@@ -61,7 +64,8 @@ angular.module('scanner.controllers', ['ionic'])
             $scope.isScan =false;
           }
         },function(err){
-          console.log(err);
+          console.log(JSON.stringify(err) + "error");
+          //alert(JSON.stringify(err));
           $scope.isInValid = "Orange";
           $scope.message = err;
           $scope.isScan =false;
@@ -74,8 +78,9 @@ angular.module('scanner.controllers', ['ionic'])
     $scope.getManual = function() {
       if($scope.eventName.eventCode.length>0){
         if($scope.app.matric.length==9 && ($scope.app.matric.indexOf('U')==0 || $scope.app.matric.indexOf('u')==0) && $scope.isScan ==true ){
-          $http.get("http://172.21.147.177:8000/register/"+eventName.eventCode+"/"+$scope.app.matric).then(function(resp) {
-            if (resp.data.indexOf('New')>=0){
+          $http.get(Register.url+eventName.eventCode+"/"+$scope.app.matric).then(function(resp) {
+            var data = JSON.stringify(resp.data);
+            if (data.indexOf('New')>=0){
               vm.scanResults = "Added "+$scope.app.matric+" successfully! Please Proceed!";
               vm.succeedClass = "Green";
             }
@@ -106,10 +111,10 @@ angular.module('scanner.controllers', ['ionic'])
     vm.successFunc = function(result) {
       // Success! Barcode data is here
       if(result.length==9 && (result.indexOf('U')==0 || result.indexOf('u')==0) && $scope.isScan == true ){
-        $http.get("http://172.21.147.177:8000/register/"+eventName.eventCode+"/"+result)
+        $http.get(Register.url+eventName.eventCode+"/"+result)
           .then(function(resp) {
-
-            if (resp.data.indexOf('New')>=0) {
+            var data = JSON.stringify(resp.data);
+            if (data.indexOf('New')>=0) {
               vm.scanResults = "Added "+result+" successfully! Please Proceed!";
               vm.succeedClass = "Green";
 
@@ -120,7 +125,7 @@ angular.module('scanner.controllers', ['ionic'])
               }
 
             }
-            else if(resp.data.indexOf('already')>=0){
+            else if(data.indexOf('already')>=0){
               vm.scanResults = "Sorry "+result+" Registered";
               vm.succeedClass = "Red";
             }
@@ -229,7 +234,7 @@ angular.module('scanner.controllers', ['ionic'])
         $scope.isInValid = "Black";
         $scope.message ="Null Values Present"
       }else{
-        $http.get("http://172.21.147.177:8000/check/"+$scope.eventName.eventCode).then(function(resp){
+        $http.get(RealCheck.url+$scope.eventName.eventCode).then(function(resp){
           if(resp.data == $scope.eventName.eventName){
             $scope.isInValid ="Green";
             $scope.message="Congrats!It works!";
