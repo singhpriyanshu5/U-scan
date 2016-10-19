@@ -40,9 +40,20 @@
 </ion-view>
 
 <script id="my-modal.html" type="text/ng-template">
+
   <ion-modal-view>
-    <ion-header-bar>
-        <h1 class="title">Event Details</h1>
+    <ion-header-bar class="bar bar-header bar-positive">
+        <!--<h1 class="title">Event Details</h1>-->
+        <!--<div class="bar bar-header bar-positive">-->
+            <div class="buttons buttons-left header-item">
+                <span class="left-buttons">
+                    <button class="button button-icon button-clear ion-android-arrow-back" ng-click="modal.hide()">
+                    </button>
+                </span>
+            </div>
+            <div class="h1 title title-center light">Event Details</div>
+
+        <!--</div>-->
     </ion-header-bar>
     <ion-content>
         <label class="item item-input item-stacked-label">

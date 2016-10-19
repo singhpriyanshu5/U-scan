@@ -33,6 +33,18 @@ angular.module('scanner', [
 
   })
 
+  .directive('onFinishRender', function($rootScope) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attr) {
+        if(scope.$last) {
+          console.log("finish");
+          $rootScope.$broadcast("ngRepeatFinished");
+        }
+      }
+    }
+  })
+
 
   .run(function($rootScope, $ionicPlatform, $cordovaStatusbar) {
 

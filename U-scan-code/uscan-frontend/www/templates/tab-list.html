@@ -1,20 +1,33 @@
 <ion-view view-title="List">
     <ion-content style="background: #e8ebf1;" class="padding">
-    	<div class="bar item-input-inset bar-light" >
+    	<!--
+        <div class="bar item-input-inset bar-light" >
   			<label class="item-input-wrapper ">
     			<i class="icon ion-search placeholder-icon"></i>
     			<input type="text" ng-model="query" placeholder="Search">
   			</label>
-		</div>
+		</div>-->
     	<ion-refresher on-refresh="doRefresh()">
   		</ion-refresher>
-    	<div class="card">
+    	<div class="list card">
+            <div class="item bar item-input-inset bar-light">
+              	<label class="item-input-wrapper ">
+    			    <i class="icon ion-search placeholder-icon"></i>
+    			    <input type="text" ng-model="query" placeholder="Search">
+  		    	</label>
+            </div>
             <div class="item">
             {{len}} Students have signed up!
             </div>
         </div>
-        <ion-list>
-            <ion-item ng-repeat="items in list |filter:query">{{items.matric}}</ion-item>
+        <ion-list class="animate-ripple">
+            <ion-item ng-repeat="items in list |filter:query" class ="card" style="background:#ffffff" on-finish-render>
+                <div>
+                    <div class="item item-text-wrap">
+                        {{items.matric}}
+                    </div>
+                </div>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-view>

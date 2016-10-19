@@ -1,6 +1,7 @@
 angular.module('scanner.controllers', ['ionic'])
 
-  .controller('HomeController', function($scope, $rootScope, $cordovaBarcodeScanner, $ionicPlatform, $http, $timeout , $ionicModal, RealCheck , Register, RealList, eventName) {
+  .controller('HomeController', function($scope, $rootScope, $cordovaBarcodeScanner, $ionicPlatform, $http, $timeout , $ionicModal, RealCheck
+                                          , Register, RealList, eventName, ionicMaterialMotion, $ionicLoading) {
     var vm = this;
     vm.scanResults = '';
     vm.succeedClass = 'Normal';
@@ -39,14 +40,13 @@ angular.module('scanner.controllers', ['ionic'])
       // Execute action
     });
 
-    
-
     $scope.login = function(){
       if($scope.eventName.eventCode== null || $scope.eventName.eventName == null){
         $scope.isInValid = "Black";
         $scope.message ="Null Values Present";
         $scope.isScan =false;
-      }else{        
+      }else{
+        $ionicLoading.show();
         $http.get(RealCheck.url+$scope.eventName.eventCode + "/").then(function(resp){
           //alert(JSON.stringify(resp));
           var data = JSON.stringify(resp.data)
@@ -54,10 +54,25 @@ angular.module('scanner.controllers', ['ionic'])
             $scope.eventName.eventName = resp.data['title'];
             eventName.eventName = resp.data['title'];
             $scope.isInValid ="Green";
-            $scope.message="Congrats!It works!";
+            //$scope.message="Congrats!It works!";
             $scope.eventMessage ="Change event!";
             $scope.isScan = true;
+            $ionicLoading.hide();
+            
             $scope.closeModal();
+
+            var options = {
+                text: 'Event Code Correct',        // change snackbar's text/html
+                toast: false,           // change snackbar's style (true = rounded corners)
+                align: 'left',          // align 'left' or 'right'
+                fullWidth: true,       // snackbar takes all screen width (overrides align and toast style, also remove default 2px rounded corners)
+                timeout: 3000,          // delay before the snackbar disappears (if 0, the snackbar is permanently showed until MDSnackbars.hide() is called or the snackbar clicked)
+                html: true ,           // allows HTML insertion
+                clickToClose: true,     // enable/disable the click to close behavior
+                animation: 'slideup'       // change the animation type ('fade' or 'slideup', default to 'fade')
+            };
+
+            MDSnackbars.show(options);//show message at snack bar
           } else {
             $scope.message="This Event does not Exist!";
             $scope.isInValid="Red";
@@ -196,26 +211,38 @@ angular.module('scanner.controllers', ['ionic'])
 
   })
 
-  .controller('ListController',function($scope,$http,List,RealList,eventName){
-    console.log(RealList.url+eventName.eventCode);
+  .controller('ListController',function($scope,$http, $timeout, RealList,eventName, ionicMaterialMotion){
+
+    $scope.$on('ngRepeatFinished', function() {//when finish render the list, set ripple animation
+      ionicMaterialMotion.ripple();
+    });
+
     $http.get(RealList.url+eventName.eventCode).then(function(resp) {
       $scope.list = resp.data;
       $scope.len = Object.keys(resp.data).length;
-      $scope.doRefresh =function() {
-        console.log(RealList.url+eventName.eventCode);
-        $http.get(RealList.url+eventName.eventCode).then(function(resp) {
-          $scope.list = resp.data;
-          $scope.len = Object.keys(resp.data).length;
-          $scope.$broadcast('scroll.refreshComplete');
-        },function(err) {
-          console.error('ERR', err);
-          // err.status will contain the status code
-        });
-      };
+/*
+      $timeout(function() {
+        ionicMaterialMotion.ripple();
+      }, 1000);
+*/
+      //ionicMaterialMotion.fadeSlideInRight();
     }, function(err) {
       console.error('ERR', err);
       // err.status will contain the status code
     });
+    
+    $scope.doRefresh =function() {
+      console.log(RealList.url+eventName.eventCode);
+      $http.get(RealList.url+eventName.eventCode).then(function(resp) {
+        $scope.list = resp.data;
+        $scope.len = Object.keys(resp.data).length;
+        $scope.$broadcast('scroll.refreshComplete');
+      },function(err) {
+          console.error('ERR', err);
+          // err.status will contain the status code
+      });
+    };
+
   })
 
   .controller('LoginCtrl', function($scope, $state , $http ,Check,eventName) {
