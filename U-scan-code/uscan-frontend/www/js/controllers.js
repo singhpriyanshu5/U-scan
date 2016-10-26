@@ -213,6 +213,8 @@ angular.module('scanner.controllers', ['ionic'])
 
   .controller('ListController',function($scope,$http, $timeout, RealList,eventName, ionicMaterialMotion){
 
+    $scope.numItems = 10;
+
     $scope.$on('ngRepeatFinished', function() {//when finish render the list, set ripple animation
       ionicMaterialMotion.ripple();
     });
@@ -236,6 +238,7 @@ angular.module('scanner.controllers', ['ionic'])
       $http.get(RealList.url+eventName.eventCode).then(function(resp) {
         $scope.list = resp.data;
         $scope.len = Object.keys(resp.data).length;
+        $scope.numItems = 10;
         $scope.$broadcast('scroll.refreshComplete');
       },function(err) {
           console.error('ERR', err);
@@ -243,6 +246,15 @@ angular.module('scanner.controllers', ['ionic'])
       });
     };
 
+    $scope.addMoreItems = function() {
+      console.log("addMoreItems")
+      if($scope.len > $scope.numItems) {
+        console.log("moree");
+        $scope.numItems += 10;
+      }
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    }
+    
   })
 
   .controller('LoginCtrl', function($scope, $state , $http ,Check,eventName) {
