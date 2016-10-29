@@ -21,11 +21,17 @@ angular.module('scanner.controllers', ['ionic'])
       animation: 'slide-in-up'
     }).then(function(modal) {
       $scope.modal = modal;
-      $scope.modal.hardwareBackButtonClose = false;
+      //$scope.modal.hardwareBackButtonClose = false;
     });
     $scope.openModal = function() {
       $scope.message ="";
       $scope.modal.show();
+    //   if($scope.isScan == false){
+    //    $scope.from = "out";
+    // } else{
+    //   $scope.from = "in";
+    // }
+      resetToLogin();
     };
     $scope.closeModal = function() {
       $scope.modal.hide();
@@ -36,18 +42,30 @@ angular.module('scanner.controllers', ['ionic'])
     });
     // Execute action on hide modal
     $scope.$on('modal.hidden', function() {
+    //   if($scope.from == "in" && $scope.isScan == false){
+    //     resetToLogin();
+    // }
       // Execute action
     });
     // Execute action on remove modal
     $scope.$on('modal.removed', function() {
+    //   if($scope.isScan == true){
+    //     resetToLogin();
+    // }
       // Execute action
     });
+
+    resetToLogin = function(){
+      $scope.isScan = false;
+      $scope.eventMessage = "Login to event!";
+      $scope.eventName.eventCode = "";
+    }
 
     $scope.login = function(){
       if($scope.eventName.eventCode === null || $scope.eventName.eventCode === "" || $scope.eventName.eventName === null){
         $scope.isInValid = "Black";
         $scope.message ="Please input an event code";
-        $scope.isScan =false;
+        resetToLogin();
       }else{
         $ionicLoading.show();
         $http.get(RealCheck.url+$scope.eventName.eventCode + "/").then(function(resp){
@@ -77,11 +95,11 @@ angular.module('scanner.controllers', ['ionic'])
 
             MDSnackbars.show(options);//show message at snack bar
           } else {
-            $scope.eventName.eventCode = ""
+            //$scope.eventName.eventCode = ""
             $ionicLoading.hide();
             $scope.message="This Event does not Exist!";
             $scope.isInValid="Red";
-            $scope.isScan =false;
+            resetToLogin();
           }
         },function(err){
           $ionicLoading.hide();
@@ -89,10 +107,12 @@ angular.module('scanner.controllers', ['ionic'])
           //alert(JSON.stringify(err));
           $scope.isInValid = "Black";
           $scope.message = err;
-          $scope.isScan =false;
+          resetToLogin();
         });
       }
     };
+
+    
 
 
 
@@ -143,7 +163,7 @@ angular.module('scanner.controllers', ['ionic'])
               if(result && ionic.Platform.isAndroid()) {
                 $scope.timer = $timeout(function () {
                   vm.scan();
-                }, 300);
+                }, 600);
               }
 
             }

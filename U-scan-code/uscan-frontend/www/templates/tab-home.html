@@ -1,8 +1,7 @@
-<ion-view view-title="Scanner">
+<ion-view view-title="U-scan">
     <ion-content style="background: #e8ebf1;" class="padding">
-        <div class="card">
+        <div class="card" ng-show="isScan == false">
             <div class="item">
-                <center><p ng-class="isInEvent"><b>{{eventName.eventName | uppercase}}</b></p></center>
                 <button class="button button-block button-positive" ng-click="openModal()">
                     {{eventMessage}} &nbsp;
                     <i class="icon ion-chevron-right"></i>
@@ -34,6 +33,15 @@
                 <i class="ion-plus-circled"></i>
                 Add Manually!
             </button>
+        </div>
+        <div ng-show = "isScan == true" class="card" >
+            <div class="item">
+                <center><p  ng-class="isInEvent"><b>{{eventName.eventName | uppercase}}</b></p></center>
+                <button class="button button-block button-positive" ng-click="openModal()">
+                    {{eventMessage}} &nbsp;
+                    <i class="icon ion-chevron-right"></i>
+                </button>
+            </div>
         </div>
 
     </ion-content>

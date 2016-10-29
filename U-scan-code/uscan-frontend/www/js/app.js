@@ -5,6 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
+//server_address = 'https://murmuring-everglades-54111.herokuapp.com';
+server_address = 'http://139.59.226.250';
+
 angular.module('scanner', [
   'ionic',
   'ngCordova',
@@ -16,16 +19,16 @@ angular.module('scanner', [
     url: 'http://localhost:8100/list/'
   })
   .constant('RealList', {
-    url: 'https://murmuring-everglades-54111.herokuapp.com/list/'
+    url: server_address+'/list/'
   })
   .constant('Register', {
-    url: 'https://murmuring-everglades-54111.herokuapp.com/register/'
+    url: server_address+'/register/'
   })
   .constant('Check', {
     url: 'http://localhost:8100/check/'
   })
   .constant('RealCheck',{
-    url:'https://murmuring-everglades-54111.herokuapp.com/check/'
+    url: server_address+'/check/'
   })
   .service('eventName', function() {
     this.eventName = "";
@@ -114,6 +117,16 @@ angular.module('scanner', [
           }
         }
       });
+
+      // .state('tab.change-event', {
+      //   url: '/change-event',
+      //   views: {
+      //     'tab-change-event': {
+      //       templateUrl: 'templates/tab-change-event.html',
+      //       controller: 'HomeController as vm'
+      //     }
+      //   }
+      // });
 ////////////
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/tab/home');
