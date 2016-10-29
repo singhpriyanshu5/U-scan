@@ -47,6 +47,9 @@ angular.module('scanner', [
 
 
   .run(function($rootScope, $ionicPlatform, $cordovaStatusbar) {
+    // setTimeout(function() {
+    //     $cordovaSplashscreen.hide()
+    // }, 3000);
 
     $ionicPlatform.ready(function() {
 

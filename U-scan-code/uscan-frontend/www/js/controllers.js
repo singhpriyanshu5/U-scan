@@ -15,13 +15,16 @@ angular.module('scanner.controllers', ['ionic'])
     $scope.eventName = eventName;
     $scope.timer = null;
 
+
     $ionicModal.fromTemplateUrl('my-modal.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
       $scope.modal = modal;
+      $scope.modal.hardwareBackButtonClose = false;
     });
     $scope.openModal = function() {
+      $scope.message ="";
       $scope.modal.show();
     };
     $scope.closeModal = function() {
@@ -41,9 +44,9 @@ angular.module('scanner.controllers', ['ionic'])
     });
 
     $scope.login = function(){
-      if($scope.eventName.eventCode== null || $scope.eventName.eventName == null){
+      if($scope.eventName.eventCode === null || $scope.eventName.eventCode === "" || $scope.eventName.eventName === null){
         $scope.isInValid = "Black";
-        $scope.message ="Null Values Present";
+        $scope.message ="Please input an event code";
         $scope.isScan =false;
       }else{
         $ionicLoading.show();
@@ -74,14 +77,17 @@ angular.module('scanner.controllers', ['ionic'])
 
             MDSnackbars.show(options);//show message at snack bar
           } else {
+            $scope.eventName.eventCode = ""
+            $ionicLoading.hide();
             $scope.message="This Event does not Exist!";
             $scope.isInValid="Red";
             $scope.isScan =false;
           }
         },function(err){
+          $ionicLoading.hide();
           console.log(JSON.stringify(err) + "error");
           //alert(JSON.stringify(err));
-          $scope.isInValid = "Orange";
+          $scope.isInValid = "Black";
           $scope.message = err;
           $scope.isScan =false;
         });
@@ -99,7 +105,8 @@ angular.module('scanner.controllers', ['ionic'])
               vm.scanResults = "Added "+$scope.app.matric+" successfully! Please Proceed!";
               vm.succeedClass = "Green";
             }
-            else if(resp.data == "This matric is already registered for this event"){
+            else if(data.indexOf('already')>=0){
+
               vm.scanResults = "Sorry "+$scope.app.matric+" Registered";
               vm.succeedClass = "Red";
             }
@@ -118,7 +125,7 @@ angular.module('scanner.controllers', ['ionic'])
         }
       }
       else{
-        vm.scanResults ="Plese Log in First";
+        vm.scanResults ="Please Quit the app and login again";
         vm.succeedClass ="Orange";
       }
     };
@@ -189,18 +196,32 @@ angular.module('scanner.controllers', ['ionic'])
                 .then(function(result){
                 //success
                 vm.successFunc(result.text);
+                //console.log('sucessssss');
               }, function(err){
                 vm.failureFunc(err);
+                //console.log('failureeee')
               });
-          } else {
-            cloudSky.zBar.scan({
-              camera: "back" // defaults to "back"
-            }, function(result) {
-              vm.successFunc(result);
-            }, function(err) {
-              vm.failureFunc(err);
-            });
-          }
+          } 
+
+
+          // barcodeScanner.scan(
+          //   function(result){
+          //       //success
+          //       vm.successFunc(result.text);
+          //       //console.log('sucessssss');
+          //     }, function(err){
+          //       vm.failureFunc(err);
+          //       //console.log('failureeee')
+          //     });
+          // else {
+          //   cloudSky.zBar.scan({
+          //     camera: "back" // defaults to "back"
+          //   }, function(result) {
+          //     vm.successFunc(result);
+          //   }, function(err) {
+          //     vm.failureFunc(err);
+          //   });
+          // }
         });
       }
       else{

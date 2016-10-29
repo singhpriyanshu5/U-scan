@@ -2,7 +2,7 @@
     <ion-content style="background: #e8ebf1;" class="padding">
         <div class="card">
             <div class="item">
-                <center><p ng-class="isInEvent">{{eventName.eventName}}</p></center>
+                <center><p ng-class="isInEvent"><b>{{eventName.eventName | uppercase}}</b></p></center>
                 <button class="button button-block button-positive" ng-click="openModal()">
                     {{eventMessage}} &nbsp;
                     <i class="icon ion-chevron-right"></i>
@@ -28,7 +28,7 @@
         <div class= "card" ng-show ="isScan == true">
             <label class="item item-input item-stacked-label no-top-border">
               <span class="input-label white-color">Matric Number</span>
-              <input type="text" placeholder="U1422974A" ng-model="app.matric">
+              <input type="text" placeholder="Enter matric no. here" ng-model="app.matric">
             </label>
             <button class="button button-block button-positive" ng-click="getManual() ">
                 <i class="ion-plus-circled"></i>

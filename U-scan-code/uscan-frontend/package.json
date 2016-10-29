@@ -21,8 +21,7 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
-    "cordova-plugin-transport-security",
-    "org.cloudsky.cordovaplugins.zbar"
+    "cordova-plugin-transport-security"
   ],
   "cordovaPlatforms": [
     "ios",
