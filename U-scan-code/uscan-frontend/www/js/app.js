@@ -30,6 +30,9 @@ angular.module('scanner', [
   .constant('RealCheck',{
     url: server_address+'/check/'
   })
+  .constant('RealDelete',{
+    url: server_address+'/deleteMatric/'
+  })
   .service('eventName', function() {
     this.eventName = "";
     this.eventCode = "";
@@ -43,6 +46,7 @@ angular.module('scanner', [
         if(scope.$last) {
           console.log("finish");
           $rootScope.$broadcast("ngRepeatFinished");
+
         }
       }
     }

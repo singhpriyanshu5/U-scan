@@ -76,7 +76,7 @@ angular.module('scanner.controllers', ['ionic'])
             eventName.eventName = resp.data['title'];
             $scope.isInValid ="Green";
             //$scope.message="Congrats!It works!";
-            $scope.eventMessage ="Change event!";
+            $scope.eventMessage ="Logout";
             $scope.isScan = true;
             $ionicLoading.hide();
             
@@ -118,7 +118,7 @@ angular.module('scanner.controllers', ['ionic'])
 
     $scope.getManual = function() {
       if($scope.eventName.eventCode.length>0){
-        if($scope.app.matric.length==9 && ($scope.app.matric.indexOf('U')==0 || $scope.app.matric.indexOf('u')==0) && $scope.isScan ==true ){
+        if($scope.app.matric.length==9 && ($scope.app.matric.indexOf('U')==0 || $scope.app.matric.indexOf('u')==0 || $scope.app.matric.indexOf('N')==0 || $scope.app.matric.indexOf('n')==0) && $scope.isScan ==true ){
           $http.get(Register.url+eventName.eventCode+"/"+$scope.app.matric).then(function(resp) {
             var data = JSON.stringify(resp.data);
             if (data.indexOf('New')>=0){
@@ -136,6 +136,12 @@ angular.module('scanner.controllers', ['ionic'])
             vm.succeedClass = "Orange";
             vm.scanResults = err;
           });
+          // postdata = {eventCode: eventName.eventCode, matricNo: $scope.app.matric}
+          // $http.post('http://139.59.226.250/registerpost/', postdata).then(function(resp){
+          //   alert(JSON.stringify(resp.data));
+          // }, function(err){
+          //   alert(err);
+          // });
         }
         else{
           console.log($scope.app.matric.length==9);
@@ -152,7 +158,7 @@ angular.module('scanner.controllers', ['ionic'])
 
     vm.successFunc = function(result) {
       // Success! Barcode data is here
-      if(result.length==9 && (result.indexOf('U')==0 || result.indexOf('u')==0) && $scope.isScan == true ){
+      if(result.length==9 && (result.indexOf('U')==0 || result.indexOf('u')==0 || result.indexOf('N')==0 || result.indexOf('n')==0) && $scope.isScan == true ){
         $http.get(Register.url+eventName.eventCode+"/"+result)
           .then(function(resp) {
             var data = JSON.stringify(resp.data);
@@ -252,7 +258,7 @@ angular.module('scanner.controllers', ['ionic'])
 
   })
 
-  .controller('ListController',function($scope,$http, $timeout, RealList,eventName, ionicMaterialMotion){
+  .controller('ListController',function($scope, $ionicPopup, $http, $timeout, RealList, RealDelete, eventName, ionicMaterialMotion){
 
     $scope.numItems = 10;
 
@@ -274,8 +280,46 @@ angular.module('scanner.controllers', ['ionic'])
       // err.status will contain the status code
     });
     
+
+     // A confirm dialog
+ $scope.deleteMatric = function(matric) {
+   var confirmPopup = $ionicPopup.confirm({
+     title: 'Delete entry?',
+     template: 'Are you sure you want to delete this matric no.?',
+     okText: 'Yes', 
+     cancelText: 'No'
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+       //console.log('You are sure');
+
+        $http.get(RealDelete.url+eventName.eventCode+"/"+matric).then(function(resp){
+          //alert(JSON.stringify(resp.data));
+          //doRefresh();
+        },function(err){
+          //alert(err);
+        });
+      }
+     else {
+        //alert('not deleted');
+       //console.log('You are not sure');
+     }
+   });
+ };
+
+    // $scope.deleteMatric = function(matric){
+    //   //postdata = {matric_id: matric, event_code: eventName.eventCode};
+    //   //alert(RealDelete.url);
+    //   $http.get(RealDelete.url+eventName.eventCode+"/"+matric).then(function(resp){
+    //     alert(resp.data);
+    //   },function(err){
+    //     alert(err);
+    //   });
+    // };
+
     $scope.doRefresh =function() {
-      console.log(RealList.url+eventName.eventCode);
+      //console.log(RealList.url+eventName.eventCode);
       $http.get(RealList.url+eventName.eventCode).then(function(resp) {
         $scope.list = resp.data;
         $scope.len = Object.keys(resp.data).length;
@@ -309,6 +353,10 @@ angular.module('scanner.controllers', ['ionic'])
     // $scope.forgotPassword = function(){
     //   $state.go('forgotPassword');
     // };
+
+
+
+
     $scope.login = function(){
       if($scope.eventName.eventCode== null || $scope.eventName.eventName == null){
         $scope.isInValid = "Black";

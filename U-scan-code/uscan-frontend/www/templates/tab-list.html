@@ -21,8 +21,9 @@
             </div>
         </div>
         <ion-list class="animate-ripple">
-            <ion-item ng-repeat="items in list |filter:query |limitTo:numItems" class ="card" style="background:#ffffff" on-finish-render>
+            <ion-item ng-repeat="items in list |filter:query |limitTo:numItems" class ="card" style="background:#ffffff" on-finish-render ng-click="deleteMatric(items.matric)">
                 <div>
+                    <!-- <button>{{items.matric}}</button> -->
                     <div class="item item-text-wrap">
                         {{items.matric}}
                     </div>
